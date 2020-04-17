@@ -1,4 +1,4 @@
-from abstracts import AbstractCard
+from oop_blackjack.abstracts import AbstractCard
 
 
 class FrenchCard(AbstractCard):

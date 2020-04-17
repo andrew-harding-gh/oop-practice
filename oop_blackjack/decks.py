@@ -1,12 +1,22 @@
 from random import shuffle as rnd_shuffle  # in-place shuffling
 
-from abstracts import AbstractDeck
-from cards import FrenchCard
+from oop_blackjack.abstracts import AbstractDeck, AbstractCard
+from oop_blackjack.cards import FrenchCard
 
 
 class Deck(AbstractDeck):
     def __init__(self):
         self.cards = self._init_deck()
+
+    @property
+    def cards(self):
+        return self._cards
+
+    @cards.setter
+    def cards(self, value):
+        if not isinstance(value, list) or not all(isinstance(c, AbstractCard) for c in value):
+            raise ValueError('Can only set cards to be a list of Card instances')
+        self._cards = value
 
     def shuffle(self):
         rnd_shuffle(self.cards)
@@ -14,6 +24,7 @@ class Deck(AbstractDeck):
     def pick(self, n=1):
         """
         n: int >= 1
+        Returns cards: list of FrenchCard instances
         """
         if not self.cards:
             raise ValueError('Cannot pick from  an empty deck')
@@ -43,7 +54,7 @@ class FrenchDeck(Deck):
             for rank in FrenchCard.valid_ranks
             for suite in FrenchCard.valid_suites
         ]
-        rnd_shuffle(deck)
+        rnd_shuffle(deck)  # in-place
         return deck
 
 
