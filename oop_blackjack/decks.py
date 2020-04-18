@@ -59,7 +59,7 @@ class FrenchDeck(Deck):
 
 
 class CasinoDeck(FrenchDeck):
-    """ x count FrenchDecks shuffled together """
+    """ x-count FrenchDecks shuffled together """
 
     def __init__(self, x=8):
         Deck.__init__(self)
