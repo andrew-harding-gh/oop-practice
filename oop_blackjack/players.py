@@ -22,8 +22,10 @@ class BasePlayer(AbstractPlayer):
 class Dealer(BasePlayer):
     def __init__(self):
         BasePlayer.__init__(self)
+        self.hand = BlackJackHand(dealer=True)
 
 
 class Player(BasePlayer):
     def __init__(self):
         BasePlayer.__init__(self)
+        self.hand = BlackJackHand()

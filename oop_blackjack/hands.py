@@ -2,8 +2,8 @@ from oop_blackjack.abstracts import AbstractHand, AbstractCard
 
 
 class BaseHand(AbstractHand):
-    def __init__(self, cards=None):
-        self.cards = cards
+    def __init__(self):
+        self.cards = list()
 
     @property
     def cards(self):
@@ -16,16 +16,19 @@ class BaseHand(AbstractHand):
         self._cards = card_list
 
     def __repr__(self):
-        return self.cards
+        return str(self.cards)
 
 
 class BlackJackHand(BaseHand):
+    """
+    dealer: boolean -> if hand belongs to dealer Player
+    """
 
     rank_conversion = dict.fromkeys([11, 12, 13], 10)
 
-
-    def __init__(self):
+    def __init__(self, dealer=False):
         BaseHand.__init__(self)
+        self.dealer = dealer
         self.value = 0
 
     @property
@@ -40,10 +43,10 @@ class BlackJackHand(BaseHand):
         v = 0
         count = len(self.cards)
         if count == 2:
-            #TODO
+            # TODO
             pass
 
-
-    def get_card_value(self, card):
-        pass
-
+    def __repr__(self):
+        if self.dealer:
+            return "Hidden" + self.cards[1:]
+        return BaseHand.__repr__(self)
