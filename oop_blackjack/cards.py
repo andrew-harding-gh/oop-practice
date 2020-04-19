@@ -29,10 +29,17 @@ class FrenchCard(AbstractCard):
             raise ValueError(f'French Cards can only be in {FrenchCard.valid_suites}')
         self._suite = value
 
-    def __repr__(self):
-        return f'{self.repr_rank()} of {self.suite}'
-
-    def repr_rank(self):
-        r = self.rank
+    @staticmethod
+    def repr_rank(rank):
         d = {11: 'Jack', 12: 'Queen', 13: 'King'}
-        return d[r] if r > 10 else r
+        return d[rank] if rank > 10 else rank
+
+    def __repr__(self):
+        return f'{self.repr_rank(self.rank)} of {self.suite}'
+
+    def __eq__(self, other):
+        if isinstance(other, FrenchCard):
+            return self.rank == other.rank and self.suite == self.suite
+        return False
+
+
