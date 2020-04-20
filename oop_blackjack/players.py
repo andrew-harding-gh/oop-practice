@@ -1,11 +1,12 @@
 from abc import abstractmethod
 
-from oop_blackjack.abstracts import AbstractPlayer, AbstractCard
+from oop_blackjack.abstracts import AbstractPlayer, AbstractCard, AbstractHand
+from oop_blackjack.hands import BaseHand, BlackJackHand
 
 
 class BasePlayer(AbstractPlayer):
     def __init__(self):
-        self.hand = list()
+        self.hand = BaseHand()
 
     @property
     def hand(self):
@@ -13,22 +14,18 @@ class BasePlayer(AbstractPlayer):
 
     @hand.setter
     def hand(self, value):
-        if not isinstance(value, list) or not all(isinstance(c, AbstractCard) for c in value):
-            raise ValueError('Can only set a player hand to be a list of Card instances')
+        if not isinstance(value, AbstractHand):
+            raise ValueError('Player hand can only be set as an instance of `Hand`')
         self._hand = value
-
-    @abstractmethod
-    def hit(self):
-        pass
-
-    @abstractmethod
-    def stay(self):
-        pass
 
 
 class Dealer(BasePlayer):
-    pass
+    def __init__(self):
+        BasePlayer.__init__(self)
+        self.hand = BlackJackHand(dealer=True)
+
 
 class Player(BasePlayer):
     def __init__(self):
         BasePlayer.__init__(self)
+        self.hand = BlackJackHand()

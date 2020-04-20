@@ -59,11 +59,11 @@ class AbstractPlayer(ABC):
     #     pass
 
 
-# would this work? @TODO
 class AbstractHand(ABC):
+    @property
     @abstractmethod
-    def get_value(self):
-        pass
+    def cards(self):
+        return list()
 
     @abstractmethod
     def __repr__(self):
