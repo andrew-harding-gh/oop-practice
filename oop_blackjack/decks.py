@@ -15,7 +15,7 @@ class Deck(AbstractDeck):
     @cards.setter
     def cards(self, value):
         if not isinstance(value, list) or not all(isinstance(c, AbstractCard) for c in value):
-            raise ValueError('Can only set cards to be a list of Card instances')
+            raise TypeError('Can only set cards to be a list of Card instances')
         self._cards = value
 
     def shuffle(self):
@@ -27,7 +27,7 @@ class Deck(AbstractDeck):
         Returns cards: list of FrenchCard instances
         """
         if not self.cards:
-            raise ValueError('Cannot pick from  an empty deck')
+            raise ValueError('Cannot pick from an empty deck')
         if n > len(self.cards):
             raise ValueError('Cannot pick more cards than are available')
         cards = self.cards[:n]

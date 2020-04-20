@@ -1,40 +1,49 @@
+import operator
+from functools import total_ordering
+
 from oop_blackjack.abstracts import AbstractHand, AbstractCard
 
 
-# TODO: implement __iter__ ?
 class BaseHand(AbstractHand):
     def __init__(self):
-        self.cards = list()
+        self._cards = list()
 
     @property
     def cards(self):
         return self._cards
 
-    @cards.setter
-    def cards(self, card_list):
-        if not isinstance(card_list, list) or not all(isinstance(c, AbstractCard) for c in card_list):
-            raise ValueError('Cards attribute of BaseHand instances can only consist of a list of Card instances')
-        self._cards = card_list
-
     def add(self, card):
         if not isinstance(card, AbstractCard):
-            raise ValueError('Can only add AbstractCard instances to Hand')
+            raise TypeError('Can only add AbstractCard instances to Hand')
         self._cards.append(card)
+
+    def clear(self):
+        self.cards.clear()
 
     def __repr__(self):
         return str(self.cards)
 
-    # TODO: order will matter here, need a dif type of container? or just order
-    # def __eq__(self, other):
-    #     if isinstance(other, BaseHand):
-    #         return all(
-    #             card == ocard
-    #             for card in self.cards
-    #               and ocard in other.cards
-    #         )
-    #     return False
+    def __eq__(self, other):
+        """equivalent if both contain all the same cards and are of the same Hand type"""
+        if isinstance(other, self.__class__):
+            return all(
+                card == ocard
+                for (card, ocard)
+                in tuple(zip(
+                    sorted(self.cards, key=operator.attrgetter('rank')),
+                    sorted(other.cards, key=operator.attrgetter('rank'))
+                ))
+            )
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __iter__(self):
+        yield from self.cards
 
 
+@total_ordering  # fill orderings from eq and one operator
 class BlackJackHand(BaseHand):
     """
     dealer: boolean -> if hand belongs to dealer Player
@@ -49,14 +58,32 @@ class BlackJackHand(BaseHand):
     @property
     def value(self):
         # dynamically calc each time its called
-        total = 0
-        for card in self._cards:
-            total += BlackJackHand.rank_conversion.get(card.rank, card.rank)
-            if card.rank == 1 and total > 21:
-                total -= 10
-        return total
+        num_aces = 0
+        value = 0
+        for card in self:
+            if card.rank == 1:
+                num_aces += 1
+            value += BlackJackHand.rank_conversion.get(card.rank, card.rank)
+        i = 0
+        while i < num_aces and value > 21:
+            value -= 10
+            i += 1
+
+        return value
 
     def __repr__(self):
         if self._dealer:
-            return "Hidden" + str(self._cards[1:])
+            return str(["Hidden"] + self._cards[1:])
         return BaseHand.__repr__(self)
+
+    def __eq__(self, other):
+        """ equivalent if hand value is the same and are both BlackJack type Hands"""
+        if isinstance(other, self.__class__):
+            return self.value == other.value
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __lt__(self, other):
+        return self.value < other.value

@@ -59,7 +59,6 @@ class AbstractPlayer(ABC):
     #     pass
 
 
-# would this work? @TODO
 class AbstractHand(ABC):
     @property
     @abstractmethod
