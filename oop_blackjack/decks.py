@@ -34,6 +34,11 @@ class Deck(AbstractDeck):
         del self.cards[:n]
         return cards
 
+    def deal(self):
+        """ wrapper to only return a Card instance """
+        return self.pick(n=1)[0]
+
+
     def cut(self):
         mid = len(self.cards) // 2
         self.cards = self.cards[mid:] + self.cards[:mid]

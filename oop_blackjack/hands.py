@@ -76,6 +76,11 @@ class BlackJackHand(BaseHand):
 
         return value
 
+    @property
+    def blackjack(self):
+        """ if hand is a 'blackjack' this will beat out other hands of value 21 """
+        return self.value == 21 and len(self.cards) == 2
+
     def __repr__(self):
         if self._dealer:
             return str(["Hidden"] + self._cards[1:])
