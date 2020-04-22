@@ -38,6 +38,9 @@ class Deck(AbstractDeck):
         mid = len(self.cards) // 2
         self.cards = self.cards[mid:] + self.cards[:mid]
 
+    def __len__(self):
+        return len(self.cards)
+
 
 class FrenchDeck(Deck):
     """

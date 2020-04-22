@@ -42,6 +42,9 @@ class BaseHand(AbstractHand):
     def __iter__(self):
         yield from self.cards
 
+    def __len__(self):
+        return len(self.cards)
+
 
 @total_ordering  # fill orderings from eq and one operator
 class BlackJackHand(BaseHand):
@@ -54,6 +57,8 @@ class BlackJackHand(BaseHand):
     def __init__(self, dealer=False):
         BaseHand.__init__(self)
         self._dealer = dealer
+
+    # TODO: soft/hard property
 
     @property
     def value(self):
@@ -78,6 +83,8 @@ class BlackJackHand(BaseHand):
 
     def __eq__(self, other):
         """ equivalent if hand value is the same and are both BlackJack type Hands"""
+        if isinstance(other, int):
+            return self.value == other
         if isinstance(other, self.__class__):
             return self.value == other.value
         return False
@@ -86,4 +93,6 @@ class BlackJackHand(BaseHand):
         return not self.__eq__(other)
 
     def __lt__(self, other):
+        if isinstance(other, int):
+            return self.value < other
         return self.value < other.value
