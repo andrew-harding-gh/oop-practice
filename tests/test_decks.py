@@ -52,7 +52,7 @@ def test_casino_deck_init(casino_deck):
     assert issubclass(CasinoDeck, Deck)
     assert issubclass(CasinoDeck, AbstractDeck)
 
-    assert len(casino_deck.cards) == 8 * 52  # default param for num of decks is 8
+    assert len(casino_deck) == 8 * 52  # default param for num of decks is 8
     for c in casino_deck.pick(3):
         assert_card_is_french_card(c)
 
