@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from random import shuffle as rnd_shuffle  # in-place shuffling
 
 from oop_blackjack.abstracts import AbstractDeck, AbstractCard
@@ -17,6 +18,10 @@ class Deck(AbstractDeck):
         if not isinstance(value, list) or not all(isinstance(c, AbstractCard) for c in value):
             raise TypeError('Can only set cards to be a list of Card instances')
         self._cards = value
+
+    @abstractmethod
+    def _init_deck(self):
+        return list()
 
     def shuffle(self):
         rnd_shuffle(self.cards)
@@ -38,7 +43,6 @@ class Deck(AbstractDeck):
         """ wrapper to only return a Card instance """
         return self.pick(n=1)[0]
 
-
     def cut(self):
         mid = len(self.cards) // 2
         self.cards = self.cards[mid:] + self.cards[:mid]
@@ -56,6 +60,11 @@ class FrenchDeck(Deck):
         Deck.__init__(self)
         self.cards = self._init_deck()
 
+    @property
+    def pcent_remain(self):
+        """ :returns 0 <= int <= 100 """
+        return int(round(len(self) / 52))
+
     def _init_deck(self):
         deck = [
             FrenchCard(rank, suite)
@@ -67,9 +76,15 @@ class FrenchDeck(Deck):
 
 
 class CasinoDeck(FrenchDeck):
-    """ x-count FrenchDecks shuffled together """
+    """ num_decks-count FrenchDecks shuffled together """
 
-    def __init__(self, x=8):
+    def __init__(self, num_decks=8):
         Deck.__init__(self)
-        self.cards = self.cards * x
+        self.num_decks = num_decks
+        self.cards = self.cards * self.num_decks
         self.shuffle()
+
+    @property
+    def pcent_remain(self):
+        """ :returns 0 <= int <= 100 """
+        return int(round(len(self) / (self.num_decks * 52) * 100))
