@@ -11,12 +11,10 @@ from oop_blackjack.players import Dealer, Player
 # TODO: display dealer cards when hand ends
 
 class BlackJack:
-    def __init__(self, num_decks=8):
+    def __init__(self, num_decks=1):
         self.deck = CasinoDeck(num_decks)
         self.dealer = Dealer()
         self.player = Player()
-        self.first = True
-        # self.playing = True
 
     def main(self):
         playing = True
@@ -63,16 +61,19 @@ class BlackJack:
             self.hand_over()
             playing = self.fetch_continue()
 
-            # TODO: before new hand is dealt, do check for need to reshuffle (rebuild) deck
-
         print('\n Game over. \n Thanks for playing! :)')
 
     def new_round(self):
         """
+        check if deck needs shuffling,
         do some clean up,
         begin a new hand/round,
-        do check for initial blackjack
+        do check for initial blackjack,
         """
+        if self.deck.pcent_remain <= 75:
+            print('\n ~~ Reshuffling deck. ~~ \n')
+            self.deck = CasinoDeck(self.deck.num_decks)
+
         self.player.hand.clear()
         self.dealer.hand.clear()
 

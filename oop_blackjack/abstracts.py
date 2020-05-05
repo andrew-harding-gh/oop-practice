@@ -23,6 +23,7 @@ class AbstractCard(ABC):
 
 
 class AbstractDeck(ABC):
+    @abstractmethod
     def _init_deck(self):
         return list()
 
