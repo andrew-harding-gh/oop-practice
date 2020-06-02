@@ -19,7 +19,6 @@ class Deck(AbstractDeck):
             raise TypeError('Can only set cards to be a list of Card instances')
         self._cards = value
 
-    @abstractmethod
     def _init_deck(self):
         return list()
 

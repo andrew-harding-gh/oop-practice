@@ -19,22 +19,9 @@ class BlackJack:
     def main(self):
         playing = True
         while playing:
-            self.new_round()  # do basic stuff
+            self.new_round()
 
-            # blackjack check
-            dbj = self.dealer.hand.blackjack
-            pbj = self.player.hand.blackjack
-
-            if dbj and pbj:
-                self.end_hand("Push")
-                playing = self.fetch_continue()
-                continue
-            elif dbj and not pbj:
-                self.end_hand("You lose. Dealer blackjack")
-                playing = self.fetch_continue()
-                continue
-            elif not dbj and pbj:
-                self.end_hand("You win!")
+            if self.blackjack_check():
                 playing = self.fetch_continue()
                 continue
 
@@ -62,6 +49,21 @@ class BlackJack:
             playing = self.fetch_continue()
 
         print('\n Game over. \n Thanks for playing! :)')
+
+    def blackjack_check(self):
+        """ if either player has a blackjack, round ends ie. return True """
+
+        dbj = self.dealer.hand.blackjack
+        pbj = self.player.hand.blackjack
+
+        if dbj and pbj:
+            self.end_hand("Push")
+        elif dbj and not pbj:
+            self.end_hand("You lose. Dealer blackjack")
+        elif not dbj and pbj:
+            self.end_hand("You win!")
+
+        return dbj or pbj
 
     def new_round(self):
         """
@@ -116,9 +118,7 @@ class BlackJack:
         cont_ = input('Continue? (Y/N):')
         while cont_.lower() not in ["y", "n"]:
             cont_ = input('Please enter a valid response. `Y` or `N`')
-        if cont_.lower() == "y":
-            return True
-        return False
+        return True if cont_.lower() == "y" else False
 
     def print_hand(self, dealer=False):
         """
