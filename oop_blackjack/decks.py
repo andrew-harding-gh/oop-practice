@@ -38,7 +38,7 @@ class Deck(AbstractDeck):
         del self.cards[:n]
         return cards
 
-    def deal(self):
+    def deal_top_card(self):
         """ wrapper to only return a Card instance """
         return self.pick(n=1)[0]
 
@@ -60,7 +60,7 @@ class FrenchDeck(Deck):
         self.cards = self._init_deck()
 
     @property
-    def pcent_remain(self):
+    def percent_remain(self):
         """ :returns 0 <= int <= 100 """
         return int(round(len(self) / 52))
 
@@ -84,6 +84,6 @@ class CasinoDeck(FrenchDeck):
         self.shuffle()
 
     @property
-    def pcent_remain(self):
+    def percent_remain(self):
         """ :returns 0 <= int <= 100 """
         return int(round(len(self) / (self.num_decks * 52) * 100))

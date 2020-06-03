@@ -21,49 +21,62 @@ class BlackJack:
         while playing:
             self.new_round()
 
-            if self.blackjack_check():
-                playing = self.fetch_continue()
+            if self.blackjack_is_present():
+                playing = self.player_keep_playing()
                 continue
 
-            # no blackjack, now we actually play
-            while not self.player.hand > 21:
-                if self.player_cont_hand():
-                    continue
-                break
-
-            if self.player.hand > 21:
-                self.end_hand("You lose. Busted")
-                playing = self.fetch_continue()
+            self.player_turn()
+            if self.player.hand.busted:
+                self.end_round("You lose. Busted")
+                playing = self.player_keep_playing()  # TODO: instead of asking for a player input every turn, allow for `QQ` input to kill game
                 continue
 
-            # if player still alive, dealer turn
-            self.dealer_action()
+            self.dealer_turn()
 
-            if self.dealer.hand > 21:
-                self.end_hand('You win! Dealer busted.')
-                playing = self.fetch_continue()
-                continue
-
-            # eval both hands
+            # finally, eval both hands
             self.hand_over()
-            playing = self.fetch_continue()
+            playing = self.player_keep_playing()
 
         print('\n Game over. \n Thanks for playing! :)')
 
-    def blackjack_check(self):
-        """ if either player has a blackjack, round ends ie. return True """
+    def blackjack_is_present(self):
+        """ if either player has a blackjack, round ends -> return True """
 
         dbj = self.dealer.hand.blackjack
         pbj = self.player.hand.blackjack
 
         if dbj and pbj:
-            self.end_hand("Push")
-        elif dbj and not pbj:
-            self.end_hand("You lose. Dealer blackjack")
-        elif not dbj and pbj:
-            self.end_hand("You win!")
+            self.end_round("Push on double Blackjack")
+        elif dbj:
+            self.end_round("You lose. Dealer blackjack")
+        elif pbj:
+            self.end_round("Blackjack! You win!")
 
         return dbj or pbj
+
+    def player_turn(self):
+        """
+        player can begin actions after both hands are checked for blackjack;
+        ie. all hands in play are < 21
+        """
+
+        player_continues = True
+
+        while player_continues:
+            choice = input("Hit (h) or Stay (s)").lower()
+
+            while choice not in ['h', 's']:
+                choice = input('Please enter a valid response. `H` or `S`')
+
+            if choice == 'h':
+                self.player.is_dealt(self.deck.deal_top_card())
+                self.print_hand(self.player)
+
+                if self.player.hand >= 21:
+                    player_continues = False
+
+            elif choice == 's':
+                player_continues = False
 
     def new_round(self):
         """
@@ -72,7 +85,7 @@ class BlackJack:
         begin a new hand/round,
         do check for initial blackjack,
         """
-        if self.deck.pcent_remain <= 75:
+        if self.deck.percent_remain <= 75:
             print('\n ~~ Reshuffling deck. ~~ \n')
             self.deck = CasinoDeck(self.deck.num_decks)
 
@@ -80,58 +93,52 @@ class BlackJack:
         self.dealer.hand.clear()
 
         for i in range(2):
-            self.dealer.is_dealt(self.deck.deal())
-            self.player.is_dealt(self.deck.deal())
+            self.dealer.is_dealt(self.deck.deal_top_card())
+            self.player.is_dealt(self.deck.deal_top_card())
 
-        self.print_hand(dealer=True)
-        self.print_hand(dealer=False)
+        self.print_hand(self.dealer)
+        self.print_hand(self.player)
 
     def hand_over(self):
-        """ both hands should not be over 21 when getting here """
-        # TODO: include blackjack prop in win condition
+        if self.dealer.hand.busted:
+            self.end_round('You win! Dealer busted.')
+            return
+
         if self.player.hand == self.dealer.hand:
-
-            self.end_hand("Push")
+            self.end_round("Push")
         elif self.player.hand > self.dealer.hand:
-            self.end_hand("You win!")
+            self.end_round("You win!")
         else:
-            self.end_hand("You lose.")
+            self.end_round("You lose.")
 
-    def player_cont_hand(self, dd=False):
-        cstr = "Hit (h) or Stay (s)"
-        choice = input(cstr)
-        while choice not in ['h', 's']:
-            choice = input('Please enter a valid response. `H` or `S`')
-        if choice == 'h':
-            self.player.is_dealt(self.deck.deal())
-            self.print_hand(dealer=False)
-            return True
-        return False
-
-    def dealer_action(self):
+    def dealer_turn(self):
         """ dealer hits on soft 17 """
         while self.dealer.hand <= 17:
-            self.dealer.is_dealt(self.deck.deal())
+            self.dealer.is_dealt(self.deck.deal_top_card())
 
     @staticmethod
-    def fetch_continue():
+    def player_keep_playing():
         cont_ = input('Continue? (Y/N):')
         while cont_.lower() not in ["y", "n"]:
             cont_ = input('Please enter a valid response. `Y` or `N`')
         return True if cont_.lower() == "y" else False
 
-    def print_hand(self, dealer=False):
+    @staticmethod
+    def print_hand(player):
         """
         fancy print Hand
-        :param dealer: boolean -> whether hand to be printed is dealer or not
+        :param player: Player instance containing Hand to be printed
         """
+        dealer = player.hand._dealer
+
+        print('\n')
         if dealer:
             BlackJack.line_print("Dealer's hand")
-            print(self.dealer.hand)
+            print(player.hand)
         else:
-            BlackJack.line_print("Player's hand")
-            print(self.player.hand)
-            print(f'Hand value of {self.player.hand.value}')
+            BlackJack.line_print("Your hand")
+            print(player.hand)
+            print(f'Hand value of {player.hand.value}')
         # finally
         print('\n')
 
@@ -139,10 +146,11 @@ class BlackJack:
     def line_print(text):
         print(f"{'---------' * 3} {text}  {'---------' * 3}")
 
-    @staticmethod
-    def end_hand(reason):
+    def end_round(self, reason):
         BlackJack.line_print("~~ End of Hand ~~")
         print(reason)
+        print(f'Dealer had {self.dealer.hand.value}')
+        print(f'You had {self.player.hand.value}')
         print('\n')
 
 

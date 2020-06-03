@@ -56,13 +56,17 @@ class BlackJackHand(BaseHand):
 
     def __init__(self, dealer=False):
         BaseHand.__init__(self)
+        # TODO: remove dealer property, hands should not know about who has them
         self._dealer = dealer
 
     # TODO: soft/hard property
 
     @property
+    def busted(self):
+        return True if self.value > 21 else False
+
+    @property
     def value(self):
-        # dynamically calc each time its called
         num_aces = 0
         value = 0
         for card in self:

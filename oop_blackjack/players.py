@@ -20,7 +20,7 @@ class BasePlayer(AbstractPlayer):
 
     def is_dealt(self, card):
         if not isinstance(card, AbstractCard):
-            raise TypeError('Can only deal Cards to Players')
+            raise TypeError('Can only deal_top_card Cards to Players')
         self.hand.add(card)
 
 
