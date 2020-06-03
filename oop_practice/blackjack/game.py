@@ -1,5 +1,5 @@
-from oop_blackjack.decks import CasinoDeck
-from oop_blackjack.players import BlackJackPlayer
+from oop_practice.blackjack.decks import CasinoDeck
+from oop_practice.blackjack.players import BlackJackPlayer
 
 
 # TODO: add flags for verbosity of game (eg. removing suites)

@@ -1,8 +1,8 @@
 import pytest
 
-from oop_blackjack.abstracts import AbstractCard, AbstractDeck
-from oop_blackjack.cards import FrenchCard
-from oop_blackjack.decks import Deck, FrenchDeck, CasinoDeck
+from oop_practice.blackjack.abstracts import AbstractDeck
+from oop_practice.blackjack.cards import FrenchCard
+from oop_practice.blackjack.decks import Deck, FrenchDeck, CasinoDeck
 
 
 @pytest.fixture

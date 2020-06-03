@@ -1,7 +1,7 @@
 import pytest
 
-from oop_blackjack.cards import FrenchCard
-from oop_blackjack.hands import BaseHand, BlackJackHand
+from oop_practice.blackjack.cards import FrenchCard
+from oop_practice.blackjack.hands import BaseHand, BlackJackHand
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ def test_hand_eq(base_hand, some_cards):
 
 
 def test_bj_hand_value_aces():
-    phand, dhand = BlackJackHand(), BlackJackHand(dealer=True)
+    phand, dhand = BlackJackHand(), BlackJackHand()
 
     aoh = FrenchCard(1, 'Hearts')
     for i in range(1, 5):
@@ -73,7 +73,7 @@ def test_bj_hand_value_general():
 
 
 def test_bj_hand_comparison():
-    h1, h2 = BlackJackHand(), BlackJackHand(dealer=True)
+    h1, h2 = BlackJackHand(), BlackJackHand()
 
     h1.add(FrenchCard(1, 'Spades'))
     h1.add(FrenchCard(10, 'Clubs'))

@@ -1,7 +1,5 @@
-from abc import abstractmethod
-
-from oop_blackjack.abstracts import AbstractPlayer, AbstractCard, AbstractHand
-from oop_blackjack.hands import BaseHand, BlackJackHand
+from oop_practice.blackjack.abstracts import AbstractPlayer, AbstractCard
+from oop_practice.blackjack.hands import BaseHand, BlackJackHand
 
 
 class BasePlayer(AbstractPlayer):

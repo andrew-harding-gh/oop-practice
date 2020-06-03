@@ -1,12 +1,12 @@
 import pytest
 
-from oop_blackjack.decks import FrenchDeck
-from oop_blackjack.players import Dealer, BlackJackPlayer, BasePlayer
+from oop_practice.blackjack.decks import FrenchDeck
+from oop_practice.blackjack.players import BlackJackPlayer
 
 
 def test_deal_pick_to_player():
     deck = FrenchDeck()
-    dealer = Dealer()
+    dealer = BlackJackPlayer()
     player = BlackJackPlayer()
 
     picked = deck.pick()

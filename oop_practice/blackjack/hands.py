@@ -1,7 +1,7 @@
 import operator
 from functools import total_ordering
 
-from oop_blackjack.abstracts import AbstractHand, AbstractCard
+from oop_practice.blackjack.abstracts import AbstractHand, AbstractCard
 
 
 class BaseHand(AbstractHand):

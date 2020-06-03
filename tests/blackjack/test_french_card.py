@@ -1,7 +1,7 @@
 import pytest
 import random
 
-from oop_blackjack.cards import FrenchCard
+from oop_practice.blackjack.cards import FrenchCard
 
 
 def test_props_fail(some_card):

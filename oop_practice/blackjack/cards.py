@@ -1,6 +1,4 @@
-from functools import total_ordering
-
-from oop_blackjack.abstracts import AbstractCard
+from oop_practice.blackjack.abstracts import AbstractCard
 
 
 # @total_ordering  # fill orderings from eq and one operator

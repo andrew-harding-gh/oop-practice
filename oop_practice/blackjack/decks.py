@@ -1,8 +1,7 @@
-from abc import abstractmethod
 from random import shuffle as rnd_shuffle  # in-place shuffling
 
-from oop_blackjack.abstracts import AbstractDeck, AbstractCard
-from oop_blackjack.cards import FrenchCard
+from oop_practice.blackjack.abstracts import AbstractDeck, AbstractCard
+from oop_practice.blackjack.cards import FrenchCard
 
 
 class Deck(AbstractDeck):
