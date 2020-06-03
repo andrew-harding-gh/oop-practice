@@ -1,5 +1,5 @@
 from oop_blackjack.decks import CasinoDeck
-from oop_blackjack.players import Dealer, Player
+from oop_blackjack.players import BlackJackPlayer
 
 
 # TODO: add flags for verbosity of game (eg. removing suites)
@@ -11,10 +11,10 @@ from oop_blackjack.players import Dealer, Player
 # TODO: display dealer cards when hand ends
 
 class BlackJack:
-    def __init__(self, num_decks=1):
+    def __init__(self, num_decks=8):
         self.deck = CasinoDeck(num_decks)
-        self.dealer = Dealer()
-        self.player = Player()
+        self.dealer = BlackJackPlayer()
+        self.player = BlackJackPlayer()
 
     def main(self):
         playing = True
@@ -70,7 +70,7 @@ class BlackJack:
 
             if choice == 'h':
                 self.player.is_dealt(self.deck.deal_top_card())
-                self.print_hand(self.player)
+                self.print_hand(self.player.hand)
 
                 if self.player.hand >= 21:
                     player_continues = False
@@ -96,8 +96,8 @@ class BlackJack:
             self.dealer.is_dealt(self.deck.deal_top_card())
             self.player.is_dealt(self.deck.deal_top_card())
 
-        self.print_hand(self.dealer)
-        self.print_hand(self.player)
+        self.print_hand(self.dealer.hand, dealer=True)
+        self.print_hand(self.player.hand)
 
     def hand_over(self):
         if self.dealer.hand.busted:
@@ -124,21 +124,22 @@ class BlackJack:
         return True if cont_.lower() == "y" else False
 
     @staticmethod
-    def print_hand(player):
+    def print_hand(hand, dealer=False):
         """
         fancy print Hand
-        :param player: Player instance containing Hand to be printed
+        :param hand: Hand instance to be printed -> Hand;
+        :param dealer: switch for hiding first card -> boolean;
         """
-        dealer = player.hand._dealer
 
         print('\n')
         if dealer:
             BlackJack.line_print("Dealer's hand")
-            print(player.hand)
+            print(hand.dealer_repr())
+            print(f'Hand value of {hand.value}')
         else:
             BlackJack.line_print("Your hand")
-            print(player.hand)
-            print(f'Hand value of {player.hand.value}')
+            print(hand)
+            print(f'Hand value of {hand.value}')
         # finally
         print('\n')
 

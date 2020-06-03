@@ -15,7 +15,7 @@ class BasePlayer(AbstractPlayer):
     # @hand.setter
     # def hand(self, value):
     #     if not isinstance(value, AbstractHand):
-    #         raise ValueError('Player hand can only be set as an instance of `Hand`')
+    #         raise ValueError('BlackJackPlayer hand can only be set as an instance of `Hand`')
     #     self._hand = value
 
     def is_dealt(self, card):
@@ -24,14 +24,8 @@ class BasePlayer(AbstractPlayer):
         self.hand.add(card)
 
 
-class Dealer(BasePlayer):
-    def __init__(self):
-        BasePlayer.__init__(self)
-        self._hand = BlackJackHand(dealer=True)
-
-
 # TODO: add chip/$$ count
-class Player(BasePlayer):
+class BlackJackPlayer(BasePlayer):
     def __init__(self):
         BasePlayer.__init__(self)
         self._hand = BlackJackHand()
