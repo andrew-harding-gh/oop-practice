@@ -1,10 +1,10 @@
-from oop_blackjack import decks, hands, players
+from oop_blackjack.game import BlackJack
 
 
 class BlackJackApp:
 
     def main(self):
-        pass
+        BlackJack().main()
 
 
 if __name__ == '__main__':

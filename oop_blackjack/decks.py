@@ -19,7 +19,6 @@ class Deck(AbstractDeck):
             raise TypeError('Can only set cards to be a list of Card instances')
         self._cards = value
 
-    @abstractmethod
     def _init_deck(self):
         return list()
 
@@ -39,7 +38,7 @@ class Deck(AbstractDeck):
         del self.cards[:n]
         return cards
 
-    def deal(self):
+    def deal_top_card(self):
         """ wrapper to only return a Card instance """
         return self.pick(n=1)[0]
 
@@ -61,7 +60,7 @@ class FrenchDeck(Deck):
         self.cards = self._init_deck()
 
     @property
-    def pcent_remain(self):
+    def percent_remain(self):
         """ :returns 0 <= int <= 100 """
         return int(round(len(self) / 52))
 
@@ -81,10 +80,10 @@ class CasinoDeck(FrenchDeck):
     def __init__(self, num_decks=8):
         Deck.__init__(self)
         self.num_decks = num_decks
-        self.cards = self.cards * self.num_decks
+        self.cards = self.cards * self.num_decks  # we don't care about obj id equivalence for cards
         self.shuffle()
 
     @property
-    def pcent_remain(self):
+    def percent_remain(self):
         """ :returns 0 <= int <= 100 """
         return int(round(len(self) / (self.num_decks * 52) * 100))

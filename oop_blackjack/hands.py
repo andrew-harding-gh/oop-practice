@@ -49,20 +49,22 @@ class BaseHand(AbstractHand):
 @total_ordering  # fill orderings from eq and one operator
 class BlackJackHand(BaseHand):
     """
-    dealer: boolean -> if hand belongs to dealer Player
+    dealer: boolean -> if hand belongs to dealer BlackJackPlayer
     """
 
     rank_conversion = {11: 10, 12: 10, 13: 10, 1: 11}
 
-    def __init__(self, dealer=False):
+    def __init__(self):
         BaseHand.__init__(self)
-        self._dealer = dealer
 
     # TODO: soft/hard property
 
     @property
+    def busted(self):
+        return True if self.value > 21 else False
+
+    @property
     def value(self):
-        # dynamically calc each time its called
         num_aces = 0
         value = 0
         for card in self:
@@ -81,10 +83,8 @@ class BlackJackHand(BaseHand):
         """ if hand is a 'blackjack' this will beat out other hands of value 21 """
         return self.value == 21 and len(self.cards) == 2
 
-    def __repr__(self):
-        if self._dealer:
-            return str(["Hidden"] + self._cards[1:])
-        return BaseHand.__repr__(self)
+    def dealer_repr(self):
+        return str(["Hidden"] + self.cards[1:])
 
     def __eq__(self, other):
         """ equivalent if hand value is the same and are both BlackJack type Hands"""
