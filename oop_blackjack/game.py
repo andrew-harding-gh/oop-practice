@@ -154,6 +154,3 @@ class BlackJack:
         print(f'You had {self.player.hand.value}')
         print('\n')
 
-
-if __name__ == '__main__':
-    BlackJack().main()

@@ -80,7 +80,7 @@ class CasinoDeck(FrenchDeck):
     def __init__(self, num_decks=8):
         Deck.__init__(self)
         self.num_decks = num_decks
-        self.cards = self.cards * self.num_decks
+        self.cards = self.cards * self.num_decks  # we don't care about obj id equivalence for cards
         self.shuffle()
 
     @property
