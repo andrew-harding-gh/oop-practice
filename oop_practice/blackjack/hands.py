@@ -1,16 +1,39 @@
 import operator
+from collections import MutableSequence
 from functools import total_ordering
+from numbers import Number
 
-from oop_practice.blackjack.abstracts import AbstractHand, AbstractCard
+from oop_practice.blackjack.abstracts import AbstractCard
 
 
-class BaseHand(AbstractHand):
+class BaseHand(MutableSequence):
+
+    def __delitem__(self, i: int) -> None:
+        del self.cards[i]
+
+    def __getitem__(self, i: int):
+        return self.cards[i]
+
+    def __setitem__(self, i: int, value) -> None:
+        self.cards[i] = value
+
     def __init__(self):
         self._cards = list()
 
     @property
     def cards(self):
         return self._cards
+
+    @cards.setter
+    def cards(self, value):
+        if not isinstance(value, list):
+            raise TypeError('Can only set cards to be a list of Cards')
+        if not all(isinstance(c, AbstractCard) for c in value):
+            raise TypeError(f'All elements of the target list must implement the `{AbstractCard.__name__}` interface')
+        self._cards = value
+
+    def insert(self, index: int, value) -> None:
+        pass
 
     def add(self, card):
         if not isinstance(card, AbstractCard):
@@ -46,7 +69,7 @@ class BaseHand(AbstractHand):
         return len(self.cards)
 
 
-@total_ordering  # fill orderings from eq and one operator
+@total_ordering
 class BlackJackHand(BaseHand):
     """
     dealer: boolean -> if hand belongs to dealer BlackJackPlayer
@@ -58,6 +81,9 @@ class BlackJackHand(BaseHand):
         BaseHand.__init__(self)
 
     # TODO: soft/hard property
+    # @property
+    # def soft(self):
+    #     return
 
     @property
     def busted(self):
@@ -88,16 +114,15 @@ class BlackJackHand(BaseHand):
 
     def __eq__(self, other):
         """ equivalent if hand value is the same and are both BlackJack type Hands"""
-        if isinstance(other, int):
+        if isinstance(other, Number):
             return self.value == other
         if isinstance(other, self.__class__):
             return self.value == other.value
         return False
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
     def __lt__(self, other):
-        if isinstance(other, int):
+        if isinstance(other, Number):
             return self.value < other
-        return self.value < other.value
+        if isinstance(other, self.__class__):
+            return self.value < other.value
+        return False

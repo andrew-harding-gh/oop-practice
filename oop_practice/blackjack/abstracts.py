@@ -18,54 +18,5 @@ class AbstractCard(ABC):
 
     @property
     @abstractmethod
-    def suite(self):
-        pass
-
-
-class AbstractDeck(ABC):
-    @abstractmethod
-    def _init_deck(self):
-        return list()
-
-    @property
-    @abstractmethod
-    def cards(self):
-        return self._init_deck()
-
-    @abstractmethod
-    def pick(self):
-        pass
-
-    @abstractmethod
-    def shuffle(self):
-        pass
-
-    @abstractmethod
-    def cut(self):
-        pass
-
-
-class AbstractPlayer(ABC):
-    @property
-    @abstractmethod
-    def hand(self):
-        pass
-
-    # @abstractmethod
-    # def hit(self):
-    #     pass
-    #
-    # @abstractmethod
-    # def stay(self):
-    #     pass
-
-
-class AbstractHand(ABC):
-    @property
-    @abstractmethod
-    def cards(self):
-        return list()
-
-    @abstractmethod
-    def __repr__(self):
+    def suit(self):
         pass
