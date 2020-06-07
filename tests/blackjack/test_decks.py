@@ -42,6 +42,27 @@ def test_french_deck_init(french_deck):
         assert_card_is_french_card(c)
 
 
+def test_basic_frenchdeck_functionality():
+    deck = FrenchDeck()
+
+    assert len(deck) == 52
+    assert deck.percent_remain == 100
+    popped = deck.pop()
+    assert isinstance(popped, FrenchCard)
+    assert len(deck) == 51
+
+    # put it back on top
+    deck.insert(len(deck), popped)
+    assert len(deck) == 52
+    top = deck.pop()
+    assert popped is top
+
+    picked = deck.pick(2)
+    assert isinstance(picked, list) and len(picked) == 2
+    for el in picked:
+        assert el not in deck
+
+
 def test_casino_deck_init(casino_deck):
     # ensure inheritance
     assert isinstance(casino_deck, FrenchDeck)
@@ -51,10 +72,10 @@ def test_casino_deck_init(casino_deck):
     assert len(casino_deck) == 8 * 52  # default param for num of decks is 8
     for c in casino_deck.pick(3):
         assert_card_is_french_card(c)
-
-
 # utility
+
+
 def assert_card_is_french_card(card):
     assert isinstance(card, FrenchCard)
     assert hasattr(card, 'rank')
-    assert hasattr(card, 'suite')
+    assert hasattr(card, 'suit')

@@ -1,5 +1,5 @@
 import operator
-from collections import MutableSequence
+from collections.abc import MutableSequence
 from functools import total_ordering
 from numbers import Number
 
@@ -7,6 +7,8 @@ from oop_practice.blackjack.abstracts import AbstractCard
 
 
 class BaseHand(MutableSequence):
+    def __init__(self):
+        self._cards = list()
 
     def __delitem__(self, i: int) -> None:
         del self.cards[i]
@@ -16,32 +18,6 @@ class BaseHand(MutableSequence):
 
     def __setitem__(self, i: int, value) -> None:
         self.cards[i] = value
-
-    def __init__(self):
-        self._cards = list()
-
-    @property
-    def cards(self):
-        return self._cards
-
-    @cards.setter
-    def cards(self, value):
-        if not isinstance(value, list):
-            raise TypeError('Can only set cards to be a list of Cards')
-        if not all(isinstance(c, AbstractCard) for c in value):
-            raise TypeError(f'All elements of the target list must implement the `{AbstractCard.__name__}` interface')
-        self._cards = value
-
-    def insert(self, index: int, value) -> None:
-        pass
-
-    def add(self, card):
-        if not isinstance(card, AbstractCard):
-            raise TypeError('Can only add AbstractCard instances to Hand')
-        self._cards.append(card)
-
-    def clear(self):
-        self.cards.clear()
 
     def __repr__(self):
         return str(self.cards)
@@ -68,6 +44,29 @@ class BaseHand(MutableSequence):
     def __len__(self):
         return len(self.cards)
 
+    @property
+    def cards(self):
+        return self._cards
+
+    @cards.setter
+    def cards(self, value):
+        if not isinstance(value, list):
+            raise TypeError('Can only set cards to be a list of Cards')
+        if not all(isinstance(c, AbstractCard) for c in value):
+            raise TypeError(f'All elements of the target list must implement the `{AbstractCard.__name__}` interface')
+        self._cards = value
+
+    def insert(self, index: int, value) -> None:
+        self.cards[index] = value
+
+    def add(self, card):
+        if not isinstance(card, AbstractCard):
+            raise TypeError('Can only add AbstractCard instances to Hand')
+        self._cards.append(card)
+
+    def clear(self):
+        self.cards.clear()
+
 
 @total_ordering
 class BlackJackHand(BaseHand):
@@ -81,13 +80,17 @@ class BlackJackHand(BaseHand):
         BaseHand.__init__(self)
 
     # TODO: soft/hard property
-    # @property
-    # def soft(self):
-    #     return
+    @property
+    def soft(self):
+        return len(self) == 2 and self.contains_ace
+
+    @property
+    def contains_ace(self):
+        return any([c.rank == 1 for c in self])
 
     @property
     def busted(self):
-        return True if self.value > 21 else False
+        return self.value > 21
 
     @property
     def value(self):
@@ -105,7 +108,7 @@ class BlackJackHand(BaseHand):
         return value
 
     @property
-    def blackjack(self):
+    def natural_blackjack(self):
         """ if hand is a 'blackjack' this will beat out other hands of value 21 """
         return self.value == 21 and len(self.cards) == 2
 
@@ -117,12 +120,12 @@ class BlackJackHand(BaseHand):
         if isinstance(other, Number):
             return self.value == other
         if isinstance(other, self.__class__):
-            return self.value == other.value
-        return False
+            return self.value == other.value and self.natural_blackjack == other.natural_blackjack
+        raise TypeError(f'Cannot compare object of type {type(other)} to {self.__class__}')
 
     def __lt__(self, other):
         if isinstance(other, Number):
             return self.value < other
         if isinstance(other, self.__class__):
-            return self.value < other.value
-        return False
+            return self.value < other.value or (not self.natural_blackjack and other.natural_blackjack)
+        raise TypeError(f'Cannot compare object of type {type(other)} to {self.__class__}')

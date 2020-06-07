@@ -2,7 +2,7 @@ from oop_practice.blackjack.decks import CasinoDeck
 from oop_practice.blackjack.players import BlackJackPlayer
 
 
-# TODO: add flags for verbosity of game (eg. removing suites)
+# TODO: add flags for verbosity of game (eg. removing suits)
 # TODO: add initial print statement about when the dealer will be forced to hit/stay
 # TODO: double down (split on identical cards)
 # TODO: double (take one card and double bet)
@@ -42,8 +42,8 @@ class BlackJack:
     def blackjack_is_present(self):
         """ if either player has a blackjack, round ends -> return True """
 
-        dbj = self.dealer.hand.blackjack
-        pbj = self.player.hand.blackjack
+        dbj = self.dealer.hand.natural_blackjack
+        pbj = self.player.hand.natural_blackjack
 
         if dbj and pbj:
             self.end_round("Push on double Blackjack")
@@ -69,7 +69,7 @@ class BlackJack:
                 choice = input('Please enter a valid response. `H` or `S`')
 
             if choice == 'h':
-                self.player.is_dealt(self.deck.deal_top_card())
+                self.player.is_dealt(self.deck.pop())
                 self.print_hand(self.player.hand)
 
                 if self.player.hand >= 21:
@@ -93,8 +93,8 @@ class BlackJack:
         self.dealer.hand.clear()
 
         for i in range(2):
-            self.dealer.is_dealt(self.deck.deal_top_card())
-            self.player.is_dealt(self.deck.deal_top_card())
+            self.dealer.is_dealt(self.deck.pop())
+            self.player.is_dealt(self.deck.pop())
 
         self.print_hand(self.dealer.hand, dealer=True)
         self.print_hand(self.player.hand)
@@ -114,7 +114,7 @@ class BlackJack:
     def dealer_turn(self):
         """ dealer hits on soft 17 """
         while self.dealer.hand <= 17:
-            self.dealer.is_dealt(self.deck.deal_top_card())
+            self.dealer.is_dealt(self.deck.pop())
 
     @staticmethod
     def player_keep_playing():
