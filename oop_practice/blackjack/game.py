@@ -63,10 +63,10 @@ class BlackJack:
         player_continues = True
 
         while player_continues:
-            choice = input("Hit (h) or Stay (s)").lower()
+            choice = input("Hit (h) or Stay (s):  ").lower()
 
             while choice not in ['h', 's']:
-                choice = input('Please enter a valid response. `H` or `S`')
+                choice = input('Please enter a valid response. `H` or `S`:  ')
 
             if choice == 'h':
                 self.player.is_dealt(self.deck.pop())
@@ -118,9 +118,9 @@ class BlackJack:
 
     @staticmethod
     def player_keep_playing():
-        cont_ = input('Continue? (Y/N):')
+        cont_ = input('Continue? (Y/N):  ')
         while cont_.lower() not in ["y", "n"]:
-            cont_ = input('Please enter a valid response. `Y` or `N`')
+            cont_ = input('Please enter a valid response. `Y` or `N`:  ')
         return True if cont_.lower() == "y" else False
 
     @staticmethod
