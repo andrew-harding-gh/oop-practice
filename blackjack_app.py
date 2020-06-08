@@ -1,4 +1,4 @@
-from oop_blackjack.game import BlackJack
+from oop_practice.blackjack.game import BlackJack
 
 
 class BlackJackApp:

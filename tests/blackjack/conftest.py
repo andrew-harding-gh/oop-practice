@@ -1,6 +1,6 @@
 import pytest
 
-from oop_blackjack.cards import FrenchCard
+from oop_practice.blackjack.cards import FrenchCard
 
 
 @pytest.fixture
